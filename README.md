@@ -14,4 +14,6 @@ Just starting Node.
 ## Testing
 Or really not since there are none.
 
-`npm test`
+```
+npm test && http://0.0.0.0:3000/api/v1/posts/2143/a-token
+`

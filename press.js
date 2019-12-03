@@ -14,7 +14,7 @@ app.get('/', (req, res) => {
   res.json({ path: '/advant', status: 'okay' })
 })
 
-app.post('/api/v1/posts/:id/:token', (req, res) => {
+app.get('/api/v1/posts/:id/:token', (req, res) => {
   http = axios.create({
     baseURL: `https://staging.advantplus.com.au/api/v4`,
     headers: { Authorization: `Bearer ${req.params['token']}` }
@@ -28,11 +28,10 @@ const collectPost = (id) => {
   http.get(`/scheduled_posts/${id}`)
     .then(res => res.data.scheduled_post)
     .then(post => {
-      console.log(post)
-
       const api = buildApi(post)
       const local = downloadImg(post.image_path)
       const media = createMedia(api, local, post)
+      return media
     })
     .catch(err => console.log(err))
 }
@@ -54,7 +53,7 @@ const createPost = (api, id, post) => {
       excerpt: post.document.excerpt,
       comment_status: 'open',
       status: post.draft ? 'draft' : 'publish',
-      featured_image_id: id
+      featured_media_id: id
     })
     .then(res => res)
     .catch(err => console.log(err))
@@ -67,8 +66,7 @@ const createMedia = (api, local, post) => {
       title: `Featured image for ${post.document.title}`
     })
     .then(media => {
-      console.log(media)
-      createPost(api, media.id)
+      createPost(api, media.id, post)
       return media
     })
     .catch(err => console.log(err))
