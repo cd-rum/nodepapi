@@ -30,8 +30,8 @@ const collectPost = (id) => {
     .then(post => {
       const api = buildApi(post)
       const local = downloadImg(post.image_path)
-      const media = createMedia(api, local, post)
-      return media
+      const wordPost = createPost(api, local, post)
+      return wordPost
     })
     .catch(err => console.log(err))
 }
@@ -45,29 +45,37 @@ const buildApi = (post) => {
   return api
 }
 
-const createPost = (api, id, post) => {
+const createPost = (api, local, post) => {
   api.posts()
     .create({
       title: post.document.title,
       content: post.document.content,
       excerpt: post.document.excerpt,
       comment_status: 'open',
-      status: post.draft ? 'draft' : 'publish',
-      featured_media_id: id
+      status: post.draft ? 'draft' : 'publish'
     })
-    .then(res => res)
+    .then(res => {
+      const postId = res.id
+      createMedia(api, local, post, postId)
+      return res
+    })
     .catch(err => console.log(err))
 }
 
-const createMedia = (api, local, post) => {
+const createMedia = (api, local, post, postId) => {
   api.media().setHeaders('Content-Disposition', 'inline')
     .file(local)
     .create({
       title: `Featured image for ${post.document.title}`
     })
-    .then(media => {
-      createPost(api, media.id, post)
-      return media
+    .then(res => {
+      const imgId = res.id
+      return api.media().id(imgId).update({
+        post: postId
+      })
+    })
+    .then(res => {
+      console.log(`Media ${res.id} is now associated with post ${res.post}`)
     })
     .catch(err => console.log(err))
 }
