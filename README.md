@@ -1,11 +1,17 @@
 # press-serve
 WPAPI is in Node, so we need a Node server.
 
-## development
+## Development
+Better logs.
+
 `DEBUG=express:* node press.js`
 
-## running
+## Running
+Just starting Node.
+
 `npm start`
 
-## testing
+## Testing
+Or really not since there are none.
+
 `npm test`

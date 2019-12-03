@@ -2,40 +2,39 @@
 
 const axios = require('axios')
 const express = require('express')
-const WPAPI = require('wpapi')
-const host = 'https://staging.advantplus.com.au'
+const fs = require('fs')
+const fetch = require('node-fetch')
+const path = require('path')
+const Wordpress = require('wpapi')
 const app = express()
-const port = 3000
 
-app.listen(port, () => console.log(`press-serving ${port}`))
-
+app.listen(3000)
 app.get('/posts/:id/:token', (req, res) => {
   http = axios.create({
-    baseURL: `${host}/api/v4`,
+    baseURL: `https://staging.advantplus.com.au/api/v4`,
     headers: { Authorization: `Bearer ${req.params['token']}` }
   })
 
-  run(req.params['id'])
+  collectPost(req.params['id'])
   res.json({ id: req.params['id'], token: req.params['token'] })
 })
 
-const run = (id) => {
+const collectPost = (id) => {
   http.get(`/scheduled_posts/${id}`)
     .then(res => res.data.scheduled_post)
     .then(data => {
       const post = data
-      const api = getApi(post)
-      const wpPost = createPost(api, post)
-      console.log(wpPost)
+      const api = buildApi(post)
+      const local = download(post.image_path)
 
-      const wpMedia = createMedia(api, post)
-      console.log(wpMedia)
+      // createPost(api, post)
+      // createMedia(api, local, post)
     })
     .catch(err => console.log(err))
 }
 
-const getApi = (post) => {
-  const wpapi = new WPAPI({
+const buildApi = (post) => {
+  const wpapi = new Wordpress({
     endpoint: `${post.authorisation.page_id}/wp-json`,
     username: post.authorisation.name,
     password: post.authorisation.other_token
@@ -48,19 +47,28 @@ const createPost = (api, post) => {
     .create({
       title: post.document.title,
       content: post.document.content,
-      status: 'draft',
       excerpt: post.document.excerpt,
-      comment_status: 'open'
+      comment_status: 'open',
+      status: 'draft'
     })
     .then(res => res)
     .catch(err => console.log(err))
 }
 
-const createMedia = (api, post) => {
+const createMedia = (api, local, post) => {
   api.media()
-    .file(post.image_path)
+    .file(local)
     .create({ title: post.document.title })
-    // .then(res => wp.media().id(res.id).update({ post: id }))
     .then(res => res)
+    .catch(err => console.log(err))
+}
+
+const downloadImg = (remote) => {
+  fetch(`https://dlsauy9pfhfq1.cloudfront.net/${remote}`)
+    .then(res => {
+      const dest = fs.createWriteStream(`./tmp/${path.basename(remote)}`)
+      res.body.pipe(dest)
+      return dest
+    })
     .catch(err => console.log(err))
 }
