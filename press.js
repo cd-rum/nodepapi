@@ -9,6 +9,8 @@ const Wordpress = require('wpapi')
 const app = express()
 
 app.listen(3000)
+app.set('trust proxy', true)
+app.use(express.logger(':req[X-Forwarded-For] - - [:date] ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"'))
 
 app.get('/', (req, res) => {
   res.json({ path: '/advant', status: 'okay' })
