@@ -9,7 +9,12 @@ const Wordpress = require('wpapi')
 const app = express()
 
 app.listen(3000)
-app.get('/api/v1/posts/:id/:token', (req, res) => {
+
+app.get('/', (req, res) => {
+  res.json({ status: 'okay' })
+})
+
+app.post('/:id/:token', (req, res) => {
   http = axios.create({
     baseURL: `https://staging.advantplus.com.au/api/v4`,
     headers: { Authorization: `Bearer ${req.params['token']}` }
@@ -41,7 +46,7 @@ const buildApi = (post) => {
   return api
 }
 
-const createPost = (api, mediaId, post) => {
+const createPost = (api, id, post) => {
   api.posts()
     .create({
       title: post.document.title,
@@ -49,7 +54,7 @@ const createPost = (api, mediaId, post) => {
       excerpt: post.document.excerpt,
       comment_status: 'open',
       status: post.draft ? 'draft' : 'publish',
-      featured_image_id: mediaId
+      featured_image_id: id
     })
     .then(res => res)
     .catch(err => console.log(err))
