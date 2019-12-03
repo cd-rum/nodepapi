@@ -11,10 +11,10 @@ const app = express()
 app.listen(3000)
 
 app.get('/', (req, res) => {
-  res.json({ status: 'okay' })
+  res.json({ path: '/advant', status: 'okay' })
 })
 
-app.post('/:id/:token', (req, res) => {
+app.post('/api/v1/posts/:id/:token', (req, res) => {
   http = axios.create({
     baseURL: `https://staging.advantplus.com.au/api/v4`,
     headers: { Authorization: `Bearer ${req.params['token']}` }
