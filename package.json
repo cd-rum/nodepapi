@@ -1,0 +1,19 @@
+{
+  "name": "press-serve",
+  "version": "1.0.0",
+  "description": "Node job-server",
+  "main": "press.js",
+  "repository": "https://github.com/cd-rum/press-serve.git",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "express": "^4.17.1",
+    "fs": "^0.0.1-security",
+    "wpapi": "^1.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node press.js"
+  },
+  "author": "cd-rum",
+  "license": "ISC"
+}
