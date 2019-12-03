@@ -9,11 +9,12 @@
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
     "node-fetch": "^2.6.0",
+    "winston-express-request-logger": "^1.0.3",
     "wpapi": "^1.2.1"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node press.js"
+    "start": "DEBUG=express:* NODE_ENV=production node press.js"
   },
   "author": "cd-rum",
   "license": "ISC"

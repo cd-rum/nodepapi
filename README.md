@@ -4,8 +4,6 @@ WPAPI is in Node, so we need a Node server.
 ## Development
 Better logs.
 
-`DEBUG=express:* node press.js`
-
 ## Running
 Just starting Node.
 

@@ -6,15 +6,35 @@ const fs = require('fs')
 const fetch = require('node-fetch')
 const path = require('path')
 const Wordpress = require('wpapi')
+const winston = require('winston')
+const winstonExRegLogger = require('winston-express-request-logger')
 const app = express()
 
+winstonExRegLogger.createLogger({
+  transports: [
+    new (winston.transports.File)({
+      filename: 'press-serve-service.log',
+      handleExceptions: true,
+      timestamp: true,
+      level: 'info'
+    }),
+    new (winston.transports.Console)({
+      handleExceptions: true,
+      timestamp: true,
+      level: 'info'
+    })
+  ],
+  exitOnError: false
+})
+
 app.listen(3000)
+app.use(winstonExRegLogger.requestDetails)
 app.set('trust proxy', true)
-app.get('/', (req, res) => {
+app.get('/adv', (req, res) => {
   res.json({ path: '/advant', status: 'okay' })
 })
 
-app.get('/api/v1/posts/:id/:token', (req, res) => {
+app.get('/adv/api/v1/posts/:id/:token', (req, res) => {
   http = axios.create({
     baseURL: `https://staging.advantplus.com.au/api/v4`,
     headers: { Authorization: `Bearer ${req.params['token']}` }
