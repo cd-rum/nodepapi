@@ -1,0 +1,15 @@
+[Unit]
+Description=press-serve
+
+[Service]
+ExecStart=/var/www/press-serve/press.js
+Restart=always
+User=nobody
+Group=nogroup
+Environment=DEBUG=express:*
+Environment=NODE_ENV=production
+Environment=PATH=/usr/bin:/usr/local/bin
+WorkingDirectory=/var/www/press-serve
+
+[Install]
+WantedBy=multi-user.target
