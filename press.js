@@ -39,7 +39,7 @@ app.get('/adv', (req, res) => {
   res.json({ path: '/adv', status: 'okay' })
 })
 
-app.post('/adv/api/v1/posts/:id/:token', (req, res) => {
+app.post('/adv/api/v1/posts', (req, res) => {
   http = axios.create({
     baseURL: `https://${host}.com.au/api/v4`,
     headers: { Authorization: `Bearer ${req.body.token}` }
@@ -57,8 +57,8 @@ const collectPost = (id) => {
 
       const api = buildApi(post)
       const local = downloadImg(post.image_path)
-      // const word = createMedia(api, local, post)
-      // return word
+      const word = createMedia(api, local, post)
+      return word
     })
     .catch(err => console.log(err))
 }
