@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 
 /* eslint no-console:0, no-unused-vars:0, no-undef:0 */
-// const cloud = 'ddwfsentcju8u'
-const cloud = 'dlsauy9pfhfq1'
-const host = 'staging.advantplus'
+const cloud = 'ddwfsentcju8u'
+const host = 'advantplus'
+// const cloud = 'dlsauy9pfhfq1'
+// const host = 'staging.advantplus'
 
 const axios = require('axios')
 const express = require('express')
