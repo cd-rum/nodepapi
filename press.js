@@ -80,7 +80,7 @@ const createPost = (api, mediaId, post) => {
       excerpt: post.document.excerpt,
       comment_status: 'open',
       status: post.draft ? 'draft' : 'publish',
-      featured_media_id: mediaId
+      featured_media: mediaId
     })
     .then(res => res)
     .catch(err => console.log(err))
