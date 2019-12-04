@@ -39,14 +39,14 @@ app.get('/adv', (req, res) => {
   res.json({ path: '/adv', status: 'okay' })
 })
 
-app.post('/adv/api/v1/posts', (req, res) => {
+app.get('/adv/api/v1/posts/:id/:token', (req, res) => {
   http = axios.create({
     baseURL: `https://${host}.com.au/api/v4`,
-    headers: { Authorization: `Bearer ${req.body.token}` }
+    headers: { Authorization: `Bearer ${req.params['token']}` }
   })
 
-  collectPost(req.body.id)
-  res.json({ id: req.body.id, token: req.body.token })
+  collectPost(req.params['id'])
+  res.json({ id: req.params['id'], token: req.params['token'] })
 })
 
 const collectPost = (id) => {

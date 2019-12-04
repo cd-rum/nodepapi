@@ -14,7 +14,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "DEBUG=express:* NODE_ENV=production node press.js"
+    "start": "DEBUG=express:* node press.js"
   },
   "author": "cd-rum",
   "license": "ISC"
