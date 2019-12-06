@@ -1,17 +1,15 @@
 #!/usr/bin/env node
 
 /* eslint no-console:0, no-unused-vars:0, no-undef:0 */
-const cloud = 'ddwfsentcju8u'
-const host = 'advantplus'
-// const cloud = 'dlsauy9pfhfq1'
-// const host = 'staging.advantplus'
+const cloud = process.env.CLOUD
+const host = process.env.HOST
 
+const WPAPI = require('wpapi')
 const axios = require('axios')
 const express = require('express')
 const fs = require('fs')
 const fetch = require('node-fetch')
 const path = require('path')
-const Wordpress = require('wpapi')
 const winston = require('winston')
 const winstonExRegLogger = require('winston-express-request-logger')
 const app = express()
@@ -58,22 +56,24 @@ const collectPost = (id) => {
 
       const api = buildApi(post)
       const local = downloadImg(post.image_path)
-      const word = createMedia(api, local, post)
+      createTags(api, local, post)
       return word
     })
     .catch(err => console.log(err))
 }
 
 const buildApi = (post) => {
-  const api = new Wordpress({
-    endpoint: `${post.authorisation.page_id}/wp-json`,
-    username: post.authorisation.name,
-    password: post.authorisation.other_token
-  })
+  const api = WPAPI.discover(post.authorisation.page_id)
+    .then(site => {
+      return site.auth({
+        username: post.authorisation.name,
+        password: post.authorisation.other_token
+      })
+    })
   return api
 }
 
-const createPost = (api, mediaId, post) => {
+const createPost = (api, mediaId, post, tags) => {
   api.posts()
     .create({
       title: post.document.title,
@@ -81,13 +81,29 @@ const createPost = (api, mediaId, post) => {
       excerpt: post.document.excerpt,
       comment_status: 'open',
       status: post.draft ? 'draft' : 'publish',
-      featured_media: mediaId
+      featured_media: mediaId,
+      tags: tags
     })
     .then(res => res)
     .catch(err => console.log(err))
 }
 
-const createMedia = (api, local, post) => {
+const createTags = (api, local, post) => {
+  const remoteTags = []
+  for (const tag of post.document.tagstags) {
+    api.tags()
+      .create({
+        name: tag
+      })
+      .then(res => {
+        remoteTags.push(res.id)
+      })
+      .catch(err => console.log(err))
+  }
+  createMedia(api, local, post, remoteTags)
+}
+
+const createMedia = (api, local, post, tags) => {
   api.media().setHeaders('Content-Disposition', 'inline')
     .file(local)
     .create({
@@ -95,7 +111,7 @@ const createMedia = (api, local, post) => {
     })
     .then(res => {
       const mediaId = res.id
-      createPost(api, mediaId, post)
+      createPost(api, mediaId, post, tags)
       return res
     })
     .catch(err => console.log(err))
