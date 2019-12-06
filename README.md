@@ -7,7 +7,7 @@ Better logs by default.
 
 ## Testing
 Or really not since there are none.
-`https://nullerror.xyz/adv/api/v1/posts/2/""`
+`[ip-address]/api/v1/posts/2/""`
 
 ## Production
 Edit the service and then save it to `systemd` a la [these](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service) instructions.
@@ -32,3 +32,5 @@ sudo ufw allow 22000
 sudo systemctl start ufw && sudo systemctl enable ufw
 sudo ufw enable
 ```
+
+Then add Node and this repo.
