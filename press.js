@@ -34,11 +34,11 @@ winstonExRegLogger.createLogger({
 app.listen(3000)
 app.use(winstonExRegLogger.requestDetails)
 app.set('trust proxy', true)
-app.get('/adv', (req, res) => {
-  res.json({ path: '/adv', status: 'okay' })
+app.get('/', (req, res) => {
+  res.json({ path: '/', status: 'okay' })
 })
 
-app.get('/adv/api/v1/posts/:id/:token', (req, res) => {
+app.get('/api/v1/posts/:id/:token', (req, res) => {
   http = axios.create({
     baseURL: `https://${host}.com.au/api/v4`,
     headers: { Authorization: `Bearer ${req.params['token']}` }
