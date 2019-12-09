@@ -4,6 +4,8 @@
 const cloud = process.env.CLOUD
 const host = process.env.HOST
 
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
+
 const WPAPI = require('wpapi')
 const axios = require('axios')
 const express = require('express')
@@ -56,20 +58,29 @@ const collectPost = (id) => {
 
       const api = buildApi(post)
       const local = downloadImg(post.image_path)
-      createTags(api, local, post)
+      const word = createTags(api, local, post)
       return word
     })
     .catch(err => console.log(err))
 }
 
+// const buildApi = (post) => {
+//   const api = WPAPI.discover(post.authorisation.page_id)
+//     .then(site => {
+//       return site.auth({
+//         username: post.authorisation.name,
+//         password: post.authorisation.other_token
+//       })
+//     })
+//   return api
+// }
+
 const buildApi = (post) => {
-  const api = WPAPI.discover(post.authorisation.page_id)
-    .then(site => {
-      return site.auth({
-        username: post.authorisation.name,
-        password: post.authorisation.other_token
-      })
-    })
+  const api = new WPAPI({
+    endpoint: `${post.authorisation.page_id}/wp-json`,
+    username: post.authorisation.name,
+    password: post.authorisation.other_token
+  })
   return api
 }
 
@@ -90,7 +101,7 @@ const createPost = (api, mediaId, post, tags) => {
 
 const createTags = (api, local, post) => {
   const remoteTags = []
-  for (const tag of post.document.tagstags) {
+  for (const tag of post.document.tags) {
     api.tags()
       .create({
         name: tag
@@ -98,7 +109,11 @@ const createTags = (api, local, post) => {
       .then(res => {
         remoteTags.push(res.id)
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+
+        if (err.code === 'term_exists') remoteTags.push(err.data.term_id)
+      })
   }
   createMedia(api, local, post, remoteTags)
 }

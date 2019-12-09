@@ -14,7 +14,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "DEBUG=express:* node press.js"
+    "start": "DEBUG=express:* HOST=staging.advantplus CLOUD=ddwfsentcju8u node press.js"
   },
   "author": "cd-rum",
   "license": "ISC"
