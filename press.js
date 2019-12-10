@@ -6,15 +6,17 @@ const host = process.env.HOST
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
+const AWS = require('aws-sdk')
 const WPAPI = require('wpapi')
+
 const axios = require('axios')
 const express = require('express')
 const fs = require('fs')
-const fetch = require('node-fetch')
-const path = require('path')
 const winston = require('winston')
 const winstonExRegLogger = require('winston-express-request-logger')
+
 const app = express()
+const s3 = new AWS.S3()
 
 winstonExRegLogger.createLogger({
   transports: [
@@ -115,17 +117,17 @@ const createMedia = (api, local, post, tags) => {
 }
 
 const run = (api, post) => {
-  const filepath = `./tmp/${path.basename(post.image_path)}`
-  // if (fs.existsSync(filepath)) return filepath
-  // else {
-  fetch(`https://${cloud}.cloudfront.net/${post.image_path}`)
-    .then(res => {
-      const dest = fs.createWriteStream(filepath)
-      res.body.pipe(dest)
+  const dest = fs.createWriteStream(`./tmp/${post.filename}`)
+  const params = { Bucket: post.bucket, Key: post.key }
+  const stream = s3.getObject(params).createReadStream()
 
-      const resp = createTags(api, filepath, post)
-      return resp
-    })
-    .catch(err => console.log(err))
-  // }
+  stream.on('error', (err) => {
+    console.error(err)
+  })
+
+  stream.pipe(dest).on('error', (err) => {
+    console.error('Stream: ', err)
+  }).on('close', () => {
+    console.log('Done')
+  })
 }
