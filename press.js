@@ -118,7 +118,7 @@ const run = (api, post) => {
   const filepath = `./tmp/${path.basename(post.image_path)}`
   // if (fs.existsSync(filepath)) return filepath
   // else {
-  fetch(`https://${cloud}.cloudfront.net/${remote}`)
+  fetch(`https://${cloud}.cloudfront.net/${post.image_path}`)
     .then(res => {
       const dest = fs.createWriteStream(filepath)
       res.body.pipe(dest)
