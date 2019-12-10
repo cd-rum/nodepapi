@@ -18,12 +18,6 @@ const app = express()
 
 winstonExRegLogger.createLogger({
   transports: [
-    new (winston.transports.File)({
-      filename: 'press-serve-service.log',
-      handleExceptions: true,
-      timestamp: true,
-      level: 'info'
-    }),
     new (winston.transports.Console)({
       handleExceptions: true,
       timestamp: true,
@@ -57,23 +51,11 @@ const collectPost = (id) => {
       console.log(post)
 
       const api = buildApi(post)
-      const local = downloadImg(post.image_path)
-      const word = createTags(api, local, post)
-      return word
+      const res = run(api, post)
+      return res
     })
     .catch(err => console.log(err))
 }
-
-// const buildApi = (post) => {
-//   const api = WPAPI.discover(post.authorisation.page_id)
-//     .then(site => {
-//       return site.auth({
-//         username: post.authorisation.name,
-//         password: post.authorisation.other_token
-//       })
-//     })
-//   return api
-// }
 
 const buildApi = (post) => {
   const api = new WPAPI({
@@ -132,16 +114,18 @@ const createMedia = (api, local, post, tags) => {
     .catch(err => console.log(err))
 }
 
-const downloadImg = (remote) => {
-  const filepath = `./tmp/${path.basename(remote)}`
-  if (fs.existsSync(filepath)) return filepath
-  else {
-    fetch(`https://${cloud}.cloudfront.net/${remote}`)
-      .then(res => {
-        const dest = fs.createWriteStream(filepath)
-        res.body.pipe(dest)
-        return filepath
-      })
-      .catch(err => console.log(err))
-  }
+const downloadImg = (api, post) => {
+  const filepath = `./tmp/${path.basename(post.image_path)}`
+  // if (fs.existsSync(filepath)) return filepath
+  // else {
+  fetch(`https://${cloud}.cloudfront.net/${remote}`)
+    .then(res => {
+      const dest = fs.createWriteStream(filepath)
+      res.body.pipe(dest)
+
+      const resp = createTags(api, filepath, post)
+      return resp
+    })
+    .catch(err => console.log(err))
+  // }
 }
