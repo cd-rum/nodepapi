@@ -114,7 +114,7 @@ const createMedia = (api, local, post, tags) => {
     .catch(err => console.log(err))
 }
 
-const downloadImg = (api, post) => {
+const run = (api, post) => {
   const filepath = `./tmp/${path.basename(post.image_path)}`
   // if (fs.existsSync(filepath)) return filepath
   // else {
