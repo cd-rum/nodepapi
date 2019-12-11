@@ -88,6 +88,7 @@ const createTags = (api, local, post) => {
         name: tag
       })
       .then(res => {
+        console.log(`good tags`)
         remoteTags.push(res.id)
       })
       .catch(err => {
@@ -106,6 +107,7 @@ const createMedia = (api, local, post, tags) => {
       title: `Featured image for ${post.document.title}`
     })
     .then(res => {
+      console.log(`good media`)
       const mediaId = res.id
       createPost(api, mediaId, post, tags)
       return res
