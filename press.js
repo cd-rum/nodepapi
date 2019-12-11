@@ -1,20 +1,17 @@
 #!/usr/bin/env node
 
 /* eslint no-console:0, no-unused-vars:0, no-undef:0 */
-const cloud = process.env.CLOUD
 const host = process.env.HOST
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
 const AWS = require('aws-sdk')
 const WPAPI = require('wpapi')
-
 const axios = require('axios')
 const express = require('express')
 const fs = require('fs')
 const winston = require('winston')
 const winstonExRegLogger = require('winston-express-request-logger')
-
 const app = express()
 const s3 = new AWS.S3()
 
@@ -129,5 +126,6 @@ const run = (api, post) => {
     console.error('Stream: ', err)
   }).on('close', () => {
     console.log('Done')
+    return dest
   })
 }
