@@ -114,7 +114,8 @@ const createMedia = (api, local, post, tags) => {
 }
 
 const run = (api, post) => {
-  const dest = fs.createWriteStream(`./tmp/${post.filename}`)
+  const path = `./tmp/${post.filename}`
+  const dest = fs.createWriteStream(path)
   const params = { Bucket: post.bucket, Key: post.key }
   const stream = s3.getObject(params).createReadStream()
 
@@ -123,9 +124,9 @@ const run = (api, post) => {
   })
 
   stream.pipe(dest).on('error', (err) => {
-    console.error('Stream: ', err)
+    console.error(`error at ${err}`)
   }).on('close', () => {
-    console.log('Done')
+    createTags(api, path, post)
     return dest
   })
 }
