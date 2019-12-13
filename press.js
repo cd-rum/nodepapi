@@ -57,7 +57,7 @@ const collectPost = (id) => {
 }
 
 const updatePost = (id, wordpressRes) => {
-  http.put(`/scheduled_posts/${id}`, { provider_response: wordpressRes })
+  http.put(`/scheduled_posts/${id}`, { post: { provider_response: wordpressRes } })
     .then(res => console.log(res))
     .catch(err => console.log(err))
 }
