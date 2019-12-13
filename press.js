@@ -50,7 +50,6 @@ const collectPost = (id) => {
     .then(post => {
       const api = buildApi(post)
       const res = run(api, post)
-      updatePost(id, res)
       return res
     })
     .catch(err => console.log(err))
@@ -84,6 +83,7 @@ const createPost = (api, mediaId, post, tags) => {
     })
     .then(res => {
       console.log(res)
+      updatePost(id, res)
       return res
     })
     .catch(err => console.log(err))
