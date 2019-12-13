@@ -77,7 +77,7 @@ const createPost = (id, api, mediaId, post, tags) => {
       content: post.document.content,
       excerpt: post.document.excerpt,
       comment_status: 'open',
-      status: post.draft ? 'draft' : 'publish',
+      status: post.draft === true ? 'draft' : 'publish',
       featured_media: mediaId,
       tags: tags
     })
