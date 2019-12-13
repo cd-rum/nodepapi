@@ -12,6 +12,7 @@ const express = require('express')
 const fs = require('fs')
 const winston = require('winston')
 const winstonExRegLogger = require('winston-express-request-logger')
+
 const app = express()
 const s3 = new AWS.S3()
 
@@ -47,12 +48,17 @@ const collectPost = (id) => {
   http.get(`/scheduled_posts/${id}`)
     .then(res => res.data.scheduled_post)
     .then(post => {
-      console.log(post)
-
       const api = buildApi(post)
       const res = run(api, post)
+      updatePost(id, res)
       return res
     })
+    .catch(err => console.log(err))
+}
+
+const updatePost = (id, wordpressRes) => {
+  http.put(`/scheduled_posts/${id}`, { provider_response: wordpressRes })
+    .then(res => console.log(res))
     .catch(err => console.log(err))
 }
 
@@ -76,7 +82,10 @@ const createPost = (api, mediaId, post, tags) => {
       featured_media: mediaId,
       tags: tags
     })
-    .then(res => res)
+    .then(res => {
+      console.log(res)
+      return res
+    })
     .catch(err => console.log(err))
 }
 
@@ -84,16 +93,13 @@ const createTags = (api, local, post) => {
   const remoteTags = []
   for (const tag of post.document.tags) {
     api.tags()
-      .create({
-        name: tag
-      })
+      .create({ name: tag })
       .then(res => {
-        console.log(`good tags`)
+        console.log(`good tags: ${res}`)
         remoteTags.push(res.id)
       })
       .catch(err => {
         console.log(err)
-
         if (err.code === 'term_exists') remoteTags.push(err.data.term_id)
       })
   }
@@ -107,7 +113,7 @@ const createMedia = (api, local, post, tags) => {
       title: `Featured image for ${post.document.title}`
     })
     .then(res => {
-      console.log(`good media`)
+      console.log(`good media: ${res}`)
       const mediaId = res.id
       createPost(api, mediaId, post, tags)
       return res
@@ -121,10 +127,7 @@ const run = (api, post) => {
   const params = { Bucket: post.bucket, Key: post.key }
   const stream = s3.getObject(params).createReadStream()
 
-  stream.on('error', (err) => {
-    console.error(err)
-  })
-
+  stream.on('error', (err) => console.error(err))
   stream.pipe(dest).on('error', (err) => {
     console.error(`error at ${err}`)
   }).on('close', () => {

@@ -2,4 +2,5 @@
 /tmp
 
 .DS_Store
+decrypt.js
 package-lock.json
