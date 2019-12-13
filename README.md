@@ -7,7 +7,10 @@ Better logs by default.
 
 ## Testing
 Or really not since there are none.
-`[ip-address]/adv/api/v1/posts/324/342235`
+```
+[ip-address]/adv/api/v1/posts/324/342235
+journalctl -u press-serve.service --since today
+```
 
 ## Production
 Edit the service and then save it to `systemd` a la [these](https://stackoverflow.com/questions/4018154/how-do-i-run-a-node-js-app-as-a-background-service) instructions.
