@@ -49,7 +49,7 @@ const collectPost = (id) => {
     .then(res => res.data.scheduled_post)
     .then(post => {
       const api = buildApi(post)
-      const res = run(api, post)
+      const res = run(id, api, post)
       return res
     })
     .catch(err => console.log(err))
@@ -70,7 +70,7 @@ const buildApi = (post) => {
   return api
 }
 
-const createPost = (api, mediaId, post, tags) => {
+const createPost = (id, api, mediaId, post, tags) => {
   api.posts()
     .create({
       title: post.document.title,
@@ -89,7 +89,7 @@ const createPost = (api, mediaId, post, tags) => {
     .catch(err => console.log(err))
 }
 
-const createTags = (api, local, post) => {
+const createTags = (id, api, local, post) => {
   const remoteTags = []
   for (const tag of post.document.tags) {
     api.tags()
@@ -103,10 +103,10 @@ const createTags = (api, local, post) => {
         if (err.code === 'term_exists') remoteTags.push(err.data.term_id)
       })
   }
-  createMedia(api, local, post, remoteTags)
+  createMedia(id, api, local, post, remoteTags)
 }
 
-const createMedia = (api, local, post, tags) => {
+const createMedia = (id, api, local, post, tags) => {
   api.media().setHeaders('Content-Disposition', 'inline')
     .file(local)
     .create({
@@ -115,13 +115,13 @@ const createMedia = (api, local, post, tags) => {
     .then(res => {
       console.log(`good media: ${res}`)
       const mediaId = res.id
-      createPost(api, mediaId, post, tags)
+      createPost(id, api, mediaId, post, tags)
       return res
     })
     .catch(err => console.log(err))
 }
 
-const run = (api, post) => {
+const run = (id, api, post) => {
   const path = `./tmp/${post.filename}`
   const dest = fs.createWriteStream(path)
   const params = { Bucket: post.bucket, Key: post.key }
@@ -131,7 +131,7 @@ const run = (api, post) => {
   stream.pipe(dest).on('error', (err) => {
     console.error(`error at ${err}`)
   }).on('close', () => {
-    createTags(api, path, post)
+    createTags(id, api, path, post)
     return dest
   })
 }
