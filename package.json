@@ -5,8 +5,8 @@
   "main": "press.js",
   "repository": "https://github.com/cd-rum/press-serve.git",
   "dependencies": {
-    "aws-sdk": "^2.587.0",
-    "axios": "^0.19.0",
+    "aws-sdk": "^2.608.0",
+    "axios": "^0.19.1",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
     "winston-express-request-logger": "^1.0.3",

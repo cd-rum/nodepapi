@@ -127,6 +127,8 @@ const run = (id, api, post) => {
   const path = `./tmp/${post.filename}`
   const dest = fs.createWriteStream(path)
   const params = { Bucket: post.bucket, Key: post.key }
+  console.log(s3.endpoint)
+
   const stream = s3.getObject(params).createReadStream()
 
   stream.on('error', (err) => console.error(err))
