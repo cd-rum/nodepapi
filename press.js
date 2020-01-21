@@ -130,10 +130,12 @@ const run = (id, api, post) => {
   const stream = s3.getObject(params).createReadStream()
 
   stream.on('error', (err) => console.error(err))
-  stream.pipe(dest).on('error', (err) => {
-    console.error(`error at ${err}`)
-  }).on('close', () => {
-    createTags(id, api, path, post)
-    return dest
-  })
+  stream.pipe(dest)
+    .on('error', (err) => {
+      console.error(`error at ${err}`)
+    }).on('close', () => {
+      console.error(`no error for ${dest}`)
+      createTags(id, api, path, post)
+      return dest
+    })
 }

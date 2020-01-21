@@ -4,8 +4,8 @@ Description=press-serve
 [Service]
 ExecStart=/var/www/press-serve/press.js
 Restart=always
-User=nobody
-Group=nogroup
+User=
+Group=
 Environment=DEBUG=express:*
 Environment=PATH=/usr/bin:/usr/local/bin
 Environment=NODE_ENV=production
