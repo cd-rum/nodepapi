@@ -95,7 +95,7 @@ const createTags = (id, api, local, post) => {
     api.tags()
       .create({ name: tag })
       .then(res => {
-        console.log(`good tags: ${res}`)
+        // console.log(`good tags: ${res}`)
         remoteTags.push(res.id)
       })
       .catch(err => {
@@ -113,7 +113,7 @@ const createMedia = (id, api, local, post, tags) => {
       title: `Featured image for ${post.document.title}`
     })
     .then(res => {
-      console.log(`good media: ${res}`)
+      // console.log(`good media: ${res}`)
       const mediaId = res.id
       createPost(id, api, mediaId, post, tags)
       return res
@@ -125,15 +125,15 @@ const run = (id, api, post) => {
   const path = `./tmp/${post.filename}`
   const dest = fs.createWriteStream(path)
   const params = { Bucket: post.bucket, Key: post.key }
-  const file = s3.getObject(params)
-  console.log(file)
+
+  const file = s3.getObject(params, (err, data) => {
+    if (err) console.log(err, err.stack)
+    else console.log(data)
+  })
 
   const stream = file.createReadStream()
-  stream.on('error', (err) => console.error(err))
-  stream.pipe(dest)
-    .on('error', (err) => {
-      console.error(`error at ${err}`)
-    })
+  stream.on('error', (err) => console.log(err))
+  stream.pipe(dest).on('error', (err) => console.log(`error at ${err}`))
     .on('close', () => {
       createTags(id, api, path, post)
       return dest
