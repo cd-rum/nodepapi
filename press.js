@@ -48,6 +48,8 @@ const collectPost = (id) => {
   http.get(`/scheduled_posts/${id}`)
     .then(res => res.data.scheduled_post)
     .then(post => {
+      console.log(post)
+
       const api = buildApi(post)
       const res = run(id, api, post)
       return res
