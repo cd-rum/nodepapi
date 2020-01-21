@@ -48,8 +48,6 @@ const collectPost = (id) => {
   http.get(`/scheduled_posts/${id}`)
     .then(res => res.data.scheduled_post)
     .then(post => {
-      console.log(post)
-
       const api = buildApi(post)
       const res = run(id, api, post)
       return res
@@ -127,16 +125,16 @@ const run = (id, api, post) => {
   const path = `./tmp/${post.filename}`
   const dest = fs.createWriteStream(path)
   const params = { Bucket: post.bucket, Key: post.key }
-  console.log(s3.endpoint)
+  const file = s3.getObject(params)
+  console.log(file)
 
-  const stream = s3.getObject(params).createReadStream()
-
+  const stream = file.createReadStream()
   stream.on('error', (err) => console.error(err))
   stream.pipe(dest)
     .on('error', (err) => {
       console.error(`error at ${err}`)
-    }).on('close', () => {
-      console.error(`no error for ${dest}`)
+    })
+    .on('close', () => {
       createTags(id, api, path, post)
       return dest
     })
