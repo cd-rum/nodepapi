@@ -14,7 +14,7 @@ const winston = require('winston')
 const winstonExRegLogger = require('winston-express-request-logger')
 
 const app = express()
-const s3 = new AWS.S3()
+const s3 = new AWS.S3({ region: 'ap-southeast-2' })
 
 winstonExRegLogger.createLogger({
   transports: [
