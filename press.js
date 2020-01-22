@@ -140,4 +140,6 @@ const run = (id, api, post) => {
       createTags(id, api, path, post)
       return dest
     })
+
+  stream.pipe(dest)
 }
