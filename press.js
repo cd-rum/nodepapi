@@ -5,16 +5,21 @@ const host = process.env.HOST
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
-const AWS = require('aws-sdk')
+const aws = require('aws-sdk')
 const WPAPI = require('wpapi')
 const axios = require('axios')
 const express = require('express')
 const fs = require('fs')
+const S3ReadableStream = require('s3-readable-stream')
 const winston = require('winston')
 const winstonExRegLogger = require('winston-express-request-logger')
 
 const app = express()
-const s3 = new AWS.S3({ region: 'ap-southeast-2' })
+const s3 = new aws.S3({
+  accessKeyId: process.env['AWS_ACCESS_KEY_ID'],
+  secretAccessKey: process.env['AWS_SECRET_ACCESS_KEY'],
+  region: 'ap-southeast-2'
+})
 
 winstonExRegLogger.createLogger({
   transports: [
@@ -95,7 +100,7 @@ const createTags = (id, api, local, post) => {
     api.tags()
       .create({ name: tag })
       .then(res => {
-        // console.log(`good tags: ${res}`)
+        console.log(`good tags: ${res}`)
         remoteTags.push(res.id)
       })
       .catch(err => {
@@ -113,7 +118,7 @@ const createMedia = (id, api, local, post, tags) => {
       title: `Featured image for ${post.document.title}`
     })
     .then(res => {
-      // console.log(`good media: ${res}`)
+      console.log(`good media: ${res}`)
       const mediaId = res.id
       createPost(id, api, mediaId, post, tags)
       return res
@@ -125,16 +130,13 @@ const run = (id, api, post) => {
   const path = `./tmp/${post.filename}`
   const dest = fs.createWriteStream(path)
   const params = { Bucket: post.bucket, Key: post.key }
+  const stream = new S3ReadableStream(s3, params)
 
-  const file = s3.getObject(params, (err, data) => {
-    if (err) console.log(err, err.stack)
-    else console.log(data)
-  })
-
-  const stream = file.createReadStream()
-  stream.on('error', (err) => console.log(err))
-  stream.pipe(dest).on('error', (err) => console.log(`error at ${err}`))
+  stream
+    .on('error', (err) => console.log(err))
+    .on('open', (data) => console.log(data))
     .on('close', () => {
+      console.log(`close: end`)
       createTags(id, api, path, post)
       return dest
     })

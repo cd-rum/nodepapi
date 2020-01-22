@@ -9,6 +9,7 @@
     "axios": "^0.19.1",
     "express": "^4.17.1",
     "fs": "^0.0.1-security",
+    "s3-readable-stream": "0.0.8",
     "winston-express-request-logger": "^1.0.3",
     "wpapi": "^1.2.1"
   },
