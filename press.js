@@ -136,7 +136,12 @@ const run = (id, api, post) => {
     .on('error', (err) => console.log(err))
     .on('open', (data) => console.log(data))
     .on('close', () => {
-      console.log(`close: end`)
+      console.log(`close`)
+      createTags(id, api, path, post)
+      return dest
+    })
+    .on('end', () => {
+      console.log(`end`)
       createTags(id, api, path, post)
       return dest
     })
