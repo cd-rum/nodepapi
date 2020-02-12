@@ -22,6 +22,10 @@ const s3 = new aws.S3({
   region: 'ap-southeast-2'
 })
 
+const gopressId = ''
+const gopressName = ''
+const gopressToken = ''
+
 winstonExRegLogger.createLogger({
   transports: [
     new (winston.transports.Console)({
@@ -68,9 +72,9 @@ const updatePost = (id, wordpressRes) => {
 }
 
 const buildApi = (post) => {
-  const id = decrypt(process.env['GOPRESS_ID'], post.authorisation.gopress_id_ciphertext)
-  const name = decrypt(process.env['GOPRESS_NAME'], post.authorisation.gopress_name_ciphertext)
-  const token = decrypt(process.env['GOPRESS_TOKEN'], post.authorisation.gopress_token_ciphertext)
+  const id = decrypt(gopressId, post.authorisation.gopress_id_ciphertext)
+  const name = decrypt(gopressName, post.authorisation.gopress_name_ciphertext)
+  const token = decrypt(gopressToken, post.authorisation.gopress_token_ciphertext)
 
   const api = new WPAPI({
     endpoint: `${id}/wp-json`,
