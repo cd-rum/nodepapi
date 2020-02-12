@@ -13,6 +13,7 @@ const fs = require('fs')
 const S3ReadableStream = require('s3-readable-stream')
 const winston = require('winston')
 const winstonExRegLogger = require('winston-express-request-logger')
+const decrypt = require('decrypt')
 
 const app = express()
 const s3 = new aws.S3({
@@ -67,10 +68,14 @@ const updatePost = (id, wordpressRes) => {
 }
 
 const buildApi = (post) => {
+  const id = decrypt(process.env['GOPRESS_ID'], post.authorisation.gopress_id_ciphertext)
+  const name = decrypt(process.env['GOPRESS_NAME'], post.authorisation.gopress_name_ciphertext)
+  const token = decrypt(process.env['GOPRESS_TOKEN'], post.authorisation.gopress_token_ciphertext)
+
   const api = new WPAPI({
-    endpoint: `${post.authorisation.page_id}/wp-json`,
-    username: post.authorisation.name,
-    password: post.authorisation.other_token
+    endpoint: `${id}/wp-json`,
+    username: name,
+    password: token
   })
   return api
 }

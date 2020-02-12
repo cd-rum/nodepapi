@@ -2,7 +2,6 @@
 /tmp
 
 .DS_Store
-decrypt.js
 download.js
 package-lock.json
 test.jpg
