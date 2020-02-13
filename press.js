@@ -2,6 +2,9 @@
 
 /* eslint no-console:0, no-unused-vars:0, no-undef:0 */
 const host = process.env.HOST
+
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
+
 const aws = require('aws-sdk')
 const WPAPI = require('wpapi')
 const axios = require('axios')
@@ -47,6 +50,7 @@ winstonExRegLogger.createLogger({
 
 app.listen(3000)
 app.use(winstonExRegLogger.requestDetails)
+app.set('trust proxy', true)
 app.get('/', (req, res) => {
   res.json({ path: '/', status: 'okay' })
 })
