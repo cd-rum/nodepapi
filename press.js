@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 /* eslint no-console:0, no-unused-vars:0, no-undef:0 */
+import { decrypt } from './decrypt'
+
 const host = process.env.HOST
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
@@ -13,7 +15,6 @@ const fs = require('fs')
 const S3ReadableStream = require('s3-readable-stream')
 const winston = require('winston')
 const winstonExRegLogger = require('winston-express-request-logger')
-const decrypt = require('decrypt')
 
 const app = express()
 const s3 = new aws.S3({
