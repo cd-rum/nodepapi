@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
 /* eslint no-console:0, no-unused-vars:0, no-undef:0 */
-import { decrypt } from './decrypt'
-
 const host = process.env.HOST
 
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
@@ -12,6 +10,7 @@ const WPAPI = require('wpapi')
 const axios = require('axios')
 const express = require('express')
 const fs = require('fs')
+const crypto = require('crypto')
 const S3ReadableStream = require('s3-readable-stream')
 const winston = require('winston')
 const winstonExRegLogger = require('winston-express-request-logger')
@@ -26,6 +25,17 @@ const s3 = new aws.S3({
 const gopressId = ''
 const gopressName = ''
 const gopressToken = ''
+
+const decrypt = (key, ciphertext) => {
+  key = Buffer.from(key, 'hex')
+  ciphertext = Buffer.from(ciphertext, 'base64')
+
+  const aesgcm = crypto.createDecipheriv('aes-256-gcm', key, ciphertext.slice(0, 12))
+  aesgcm.setAuthTag(ciphertext.slice(-16))
+  const plaintext = aesgcm.update(ciphertext.slice(12, -16)) + aesgcm.final()
+
+  return plaintext
+}
 
 winstonExRegLogger.createLogger({
   transports: [
