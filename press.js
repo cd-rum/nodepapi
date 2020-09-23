@@ -3,7 +3,7 @@
 /* eslint no-console:0, no-unused-vars:0, no-undef:0 */
 const host = process.env.HOST
 
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 1
 
 const aws = require('aws-sdk')
 const WPAPI = require('wpapi')
