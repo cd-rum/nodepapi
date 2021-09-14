@@ -1,4 +1,4 @@
-# nodepapi
+# npapi
 WPAPI is in Node so we need a Node server.
 
 ## Development
