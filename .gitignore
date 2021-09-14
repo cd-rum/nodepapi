@@ -2,3 +2,4 @@
 env
 /ssl
 /tmp
+/node_modules
