@@ -1,4 +1,4 @@
-# press-serve
+# nodepapi
 WPAPI is in Node so we need a Node server.
 
 ## Development
