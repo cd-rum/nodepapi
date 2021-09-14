@@ -1,7 +1,4 @@
-/node_modules
-/tmp
-
 .DS_Store
-download.js
-package-lock.json
-test.jpg
+env
+/ssl
+/tmp

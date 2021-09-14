@@ -22,20 +22,9 @@ const s3 = new aws.S3({
   region: 'ap-southeast-2'
 })
 
-const gopressId = ''
-const gopressName = ''
-const gopressToken = ''
-
-const decrypt = (key, ciphertext) => {
-  key = Buffer.from(key, 'hex')
-  ciphertext = Buffer.from(ciphertext, 'base64')
-
-  const aesgcm = crypto.createDecipheriv('aes-256-gcm', key, ciphertext.slice(0, 12))
-  aesgcm.setAuthTag(ciphertext.slice(-16))
-  const plaintext = aesgcm.update(ciphertext.slice(12, -16)) + aesgcm.final()
-
-  return plaintext
-}
+const gopressId = process.env['GOPRESS_ID']
+const gopressName = process.env['GOPRESS_NAME']
+const gopressToken = process.env['GOPRESS_TOKEN']
 
 winstonExRegLogger.createLogger({
   transports: [
@@ -64,6 +53,21 @@ app.get('/api/v1/posts/:id/:token', (req, res) => {
   collectPost(req.params['id'])
   res.json({ id: req.params['id'], token: req.params['token'] })
 })
+
+console.log(`press-serve up`)
+
+// private methods outside main loop
+
+const decrypt = (key, ciphertext) => {
+  key = Buffer.from(key, 'hex')
+  ciphertext = Buffer.from(ciphertext, 'base64')
+
+  const aesgcm = crypto.createDecipheriv('aes-256-gcm', key, ciphertext.slice(0, 12))
+  aesgcm.setAuthTag(ciphertext.slice(-16))
+  const plaintext = aesgcm.update(ciphertext.slice(12, -16)) + aesgcm.final()
+
+  return plaintext
+}
 
 const collectPost = (id) => {
   http.get(`/scheduled_posts/${id}`)
