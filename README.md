@@ -13,7 +13,6 @@ Or really not since there are none.
 [ip-address]/adv/api/v1/posts/324/342235
 ```
 
-## Provisioning
 
 ```
 podman build . --tag=press-serve
