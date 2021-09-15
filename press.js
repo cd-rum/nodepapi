@@ -37,7 +37,7 @@ winstonExRegLogger.createLogger({
   exitOnError: false
 })
 
-app.listen(3000)
+app.listen(3333)
 app.use(winstonExRegLogger.requestDetails)
 app.set('trust proxy', true)
 app.get('/', (req, res) => {
