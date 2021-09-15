@@ -1,8 +1,6 @@
 /* eslint no-console:0, no-unused-vars:0, no-undef:0 */
-const host = process.env.HOST
 
-process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 1
-
+const dotenv = require('dotenv')
 const aws = require('aws-sdk')
 const WPAPI = require('wpapi')
 const axios = require('axios')
@@ -13,16 +11,19 @@ const S3ReadableStream = require('s3-readable-stream')
 const winston = require('winston')
 const winstonExRegLogger = require('winston-express-request-logger')
 
+dotenv.config({ path: 'env' })
+
+const host = process.env.HOST
 const app = express()
 const s3 = new aws.S3({
-  accessKeyId: process.env['AWS_ACCESS_KEY_ID'],
-  secretAccessKey: process.env['AWS_SECRET_ACCESS_KEY'],
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: 'ap-southeast-2'
 })
 
-const gopressId = process.env['GOPRESS_ID']
-const gopressName = process.env['GOPRESS_NAME']
-const gopressToken = process.env['GOPRESS_TOKEN']
+const gopressId = process.env.GOPRESS_ID
+const gopressName = process.env.GOPRESS_NAME
+const gopressToken = process.env.GOPRESS_TOKEN
 
 winstonExRegLogger.createLogger({
   transports: [
