@@ -14,6 +14,4 @@ EXPOSE 3333
 
 RUN cd /app
 
-RUN npm start
-
-CMD ["ash"]
+ENTRYPOINT node npapi.js
