@@ -1,18 +1,14 @@
 version: '3'
 services:
-  press-serve:
+  npapi:
     build: .
-    container_name: press-serve
+    container_name: npapi
     volumes:
       - ./tmp:/app/tmp
-    restart: on-failure
     expose:
       - 4000
     env_file:
       - env
-    networks:
-      pressnet:
-        ipv4_address: 10.1.0.101
   web:
     image: nginx
     container_name: nginx
@@ -23,13 +19,3 @@ services:
     ports:
       - 80:80
       - 443:443
-    networks:
-      pressnet:
-        ipv4_address: 10.1.0.102
-networks:
-  pressnet:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: 10.1.0.0/24

@@ -1,6 +1,7 @@
 FROM mhart/alpine-node:12
 
 RUN mkdir /app
+WORKDIR /app
 
 COPY . /app
 
@@ -8,6 +9,5 @@ RUN cd /app && \
     npm install --only=production && \
     source /app/env
 
-WORKDIR /app
-
-CMD ["npm", "start"]
+RUN npm start
+RUN /bin/sh

@@ -30,10 +30,11 @@ curl -L "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:
 sudo apt-get update
 sudo apt-get -y upgrade
 sudo apt-get -y install podman
+sudo sysctl net.ipv4.ip_unprivileged_port_start=80
 ```
 
 ## Booting
 ```
-podman build . --tag=press-serve
-podman run press-serve
+./boot-pods.sh
+podman rmi $(podman images -qa) -f
 ```
