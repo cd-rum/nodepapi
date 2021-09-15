@@ -52,7 +52,8 @@ app.get('/api/v1/posts/:id/:token', (req, res) => {
   res.json({ id: req.params['id'], token: req.params['token'] })
 })
 
-console.log(`npapi up for ${host}`);
+console.log(`got ${gopressId}`)
+console.log(`npapi up for ${host}`)
 
 // private methods outside main loop
 
