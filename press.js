@@ -54,8 +54,6 @@ app.get('/api/v1/posts/:id/:token', (req, res) => {
   res.json({ id: req.params['id'], token: req.params['token'] })
 })
 
-console.log(`press-serve up`)
-
 // private methods outside main loop
 
 const decrypt = (key, ciphertext) => {
