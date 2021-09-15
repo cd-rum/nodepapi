@@ -1,16 +1,19 @@
 FROM mhart/alpine-node:12
 
 RUN mkdir /app
+
 WORKDIR /app
 
 COPY . /app
 
-RUN cd /app && \
-    npm install --only=production && \
-    source /app/env
+RUN npm install
+
+RUN source /app/env
 
 EXPOSE 3333
 
-RUN node npapi.js
+RUN cd /app
+
+RUN ./npapi.js
 
 CMD ["sh"]
