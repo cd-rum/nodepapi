@@ -1,9 +1,9 @@
 {
-  "name": "press-serve",
+  "name": "npapi",
   "version": "1.0.0",
-  "description": "Node job-server",
-  "main": "press.js",
-  "repository": "https://github.com/cd-rum/press-serve.git",
+  "description": "Node Wordpress API server",
+  "main": "npapi.js",
+  "repository": "https://github.com/cd-rum/npapi.git",
   "dependencies": {
     "aws-sdk": "^2.608.0",
     "axios": "^0.21.4",
@@ -15,7 +15,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node press.js"
+    "start": "node npapi.js"
   },
   "author": "cd-rum",
   "license": "ISC"

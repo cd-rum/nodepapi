@@ -9,5 +9,8 @@ RUN cd /app && \
     npm install --only=production && \
     source /app/env
 
-RUN npm start
-CMD ["/bin/sh"]
+EXPOSE 3333
+
+RUN node npapi.js
+
+CMD ["sh"]
