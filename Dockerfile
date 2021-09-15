@@ -14,6 +14,6 @@ EXPOSE 3333
 
 RUN cd /app
 
-RUN ./npapi.js
+RUN npm start
 
-CMD ["sh"]
+CMD ["ash"]
