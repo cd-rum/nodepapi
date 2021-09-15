@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 /* eslint no-console:0, no-unused-vars:0, no-undef:0 */
 const host = process.env.HOST
 
@@ -53,6 +51,8 @@ app.get('/api/v1/posts/:id/:token', (req, res) => {
   collectPost(req.params['id'])
   res.json({ id: req.params['id'], token: req.params['token'] })
 })
+
+console.log(`npapi up for ${host}`);
 
 // private methods outside main loop
 
