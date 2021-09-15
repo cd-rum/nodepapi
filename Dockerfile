@@ -10,4 +10,4 @@ RUN cd /app && \
     source /app/env
 
 RUN npm start
-RUN /bin/sh
+CMD ["/bin/sh"]
