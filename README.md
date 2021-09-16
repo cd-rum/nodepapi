@@ -10,7 +10,7 @@ Better logs by default.
 Or really not since there are none.
 
 ```
-/adv/api/v1/posts/324/342235
+/api/v1/posts/324/342235
 ```
 
 ## Provisioning
